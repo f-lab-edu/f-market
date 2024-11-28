@@ -1,7 +1,7 @@
-package com.sorryisme.fmarket.product.service;
+package com.sorryisme.fmarket.service;
 
-import com.sorryisme.fmarket.product.dto.response.MajorCategoryResponse;
-import com.sorryisme.fmarket.product.mapper.MajorCategoryMapper;
+import com.sorryisme.fmarket.dto.response.MajorCategoryResponse;
+import com.sorryisme.fmarket.mapper.MajorCategoryMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
