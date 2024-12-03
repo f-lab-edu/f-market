@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.sorryisme.fmarket.product.mapper.MajorCategoryMapper">
+<mapper namespace="com.sorryisme.fmarket.mapper.MajorCategoryMapper">
 
 
-    <resultMap id="majorCategoryMap" type="com.sorryisme.fmarket.product.dto.response.MajorCategoryResponse">
+    <resultMap id="majorCategoryMap" type="com.sorryisme.fmarket.dto.response.MajorCategoryResponse">
         <id property="majorCategoryId"  column="major_category_id" />
         <result property="majorCategoryName" column="major_category_name" />
         <result property="description" column="description" />
         <result property="createdAt" column="created_at" />
         <result property="updatedAt" column="updated_at" />
-        <collection property="subcategories" ofType="com.sorryisme.fmarket.product.dto.response.SubcategoryResponse">
-            <id property="subcategoryId" column="sub_Category_id"/>
-            <result property="categoryName" column="category_name"/>
+        <collection property="subcategories" ofType="com.sorryisme.fmarket.dto.response.SubcategoryResponse">
+            <id property="subcategoryId" column="subcategory_id"/>
+            <result property="categoryName" column="subcategory_name"/>
             <result property="majorCategoryId" column="major_category_id" />
             <result property="createdAt" column="created_at" />
             <result property="updatedAt" column="updated_at" />
@@ -25,7 +25,7 @@
                MC.CREATED_AT,
                MC.UPDATED_AT,
                SC.SUBCATEGORY_ID,
-               SC.CATEGORY_NAME,
+               SC.CATEGORY_NAME as SUBCATEGORY_NAME,
                SC.CREATED_AT,
                SC.UPDATED_AT
         FROM MAJOR_CATEGORY MC
