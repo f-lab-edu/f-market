@@ -91,6 +91,20 @@ class UserMapperTest extends Specification {
         updatedUser.phoneNumber == "01199999999"
     }
 
+    def "로그인 아이디로 조회 시 유저 정보를 반환한다"() {
+        given:
+        User saveUser = createUser()
+        userMapper.insertUser(saveUser)
+
+        when:
+        User findUser = userMapper.findUserByLoginId("testUser")
+
+        then:
+        findUser.salt == "testSalt"
+        findUser.password == "xptmxmqlalfqjsgh!"
+
+    }
+
     private static User createUser() {
         return User.builder()
                 .loginId("testUser")

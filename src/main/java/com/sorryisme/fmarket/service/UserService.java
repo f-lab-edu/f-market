@@ -11,8 +11,10 @@ import com.sorryisme.fmarket.exception.DuplicateDataException;
 import com.sorryisme.fmarket.exception.NotFoundDataException;
 import com.sorryisme.fmarket.exception.UpdateFailException;
 import com.sorryisme.fmarket.mapper.UserMapper;
+import com.sorryisme.fmarket.utils.PasswordCipher;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,12 +36,12 @@ public class UserService {
     public long updateUser(UserUpdateRequestDto userUpdateRequestDto, long userId) {
 
         boolean isExist = userMapper.isExistUserById(userId);
-        if(!isExist) throw new NotFoundDataException("찾을 수 없는 유저입니다");
+        if (!isExist) throw new NotFoundDataException("찾을 수 없는 유저입니다");
 
         User updateUser = User.from(userUpdateRequestDto, userId);
         int result = userMapper.updateUser(updateUser);
 
-        if(result == 0) {
+        if (result == 0) {
             throw new UpdateFailException("정보 수정에 실패했습니다.");
         }
 
@@ -56,6 +58,23 @@ public class UserService {
         this.userMapper.insertStore(saveStore);
 
         return SellerResponseDto.from(saveUser, saveStore);
+    }
+
+    public Long login(String loginId, String password) throws IllegalArgumentException {
+        User user = this.userMapper.findUserByLoginId(loginId);
+
+        if (user == null) {
+            throw new IllegalArgumentException("찾을 수 없는 유저입니다.");
+        }
+
+        String salt = user.getSalt();
+        String hashedPassword = PasswordCipher.encrypt(password, salt);
+
+        if (hashedPassword.equals(user.getPassword())) {
+            return user.getId();
+        }
+
+        throw new IllegalArgumentException("로그인정보가 일치하지 않습니다.");
     }
 
     private void validateExistUser(String username, String phoneNumber) throws DuplicateDataException {
