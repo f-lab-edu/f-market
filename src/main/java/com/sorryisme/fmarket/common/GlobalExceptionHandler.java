@@ -41,7 +41,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {IllegalArgumentException.class})
     protected ResponseEntity<ResponseDto<Object>> handleIllegalArgumentException(IllegalArgumentException e) {
-        log.error(e.getMessage());
+        log.error("IllegalArgumentException", e);
         ResponseDto<Object> dto = ResponseDto.fail(HttpStatus.BAD_REQUEST.value(), null, e.getMessage());
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }

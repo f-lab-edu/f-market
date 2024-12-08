@@ -26,26 +26,26 @@ public class UserController {
 
     @PostMapping("/user/signup")
     public ResponseDto<UserResponseDto> createUser(@RequestBody @Valid UserRequestDto userRequestDto) {
-        UserResponseDto responseDto = this.userService.createUser(userRequestDto);
+        UserResponseDto responseDto = userService.createUser(userRequestDto);
         return ResponseDto.success(responseDto);
     }
 
     @PutMapping("/user/update/{userId}")
     @RequireLogin
     public ResponseDto<Long> updateUser(@RequestBody @Valid UserUpdateRequestDto userUpdateRequestDto, @PathVariable(required = true) long userId) {
-        long id = this.userService.updateUser(userUpdateRequestDto, userId);
+        long id = userService.updateUser(userUpdateRequestDto, userId);
         return ResponseDto.success(id);
     }
 
     @PostMapping("/seller/signup")
     public ResponseDto<SellerResponseDto> createSeller(@RequestBody @Valid SellerRequestDto sellerRequestDto) {
-        SellerResponseDto responseDto = this.userService.createSeller(sellerRequestDto);
+        SellerResponseDto responseDto = userService.createSeller(sellerRequestDto);
         return ResponseDto.success(responseDto);
     }
 
     @PostMapping("/user/login")
     public ResponseDto<Long> login(@RequestBody LoginDto loginDto) {
-        Long id = this.userService.login(loginDto.getLoginId(), loginDto.getPassword());
+        Long id = userService.login(loginDto.getLoginId(), loginDto.getPassword());
         sessionManager.setLoginUserId(id);
         return ResponseDto.success(id);
     }
