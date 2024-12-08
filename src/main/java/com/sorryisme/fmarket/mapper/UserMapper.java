@@ -17,4 +17,6 @@ public interface UserMapper {
     @Select("SELECT * FROM \"USER\" WHERE id = #{id}")
     User findUserById(long id);
 
+    @Select("SELECT id, salt, password FROM \"USER\" WHERE login_id = #{loginId}" )
+    User findUserByLoginId(String loginId);
 }
