@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sorryisme.fmarket.mapper.CartMapper">
+
+    <insert id="insertCart" parameterType="com.sorryisme.fmarket.domain.Cart" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO CART(user_id)
+        VALUES (#{userId})
+    </insert>
+
+    <insert id="insertCartDetail" parameterType="com.sorryisme.fmarket.domain.CartDetail" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO CART_DETAIL(cart_id, product_option_id, quantity)
+        VALUES (#{cartId}, #{productOptionId}, #{quantity})
+    </insert>
+
+    <select id="isExistCartDetailById" resultType="boolean">
+        SELECT EXISTS (SELECT id FROM CART_DETAIL WHERE id = #{cartDetailId})
+    </select>
+</mapper>

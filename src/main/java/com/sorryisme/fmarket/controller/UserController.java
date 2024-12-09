@@ -1,5 +1,6 @@
 package com.sorryisme.fmarket.controller;
 
+import com.sorryisme.fmarket.annotation.LoginUserId;
 import com.sorryisme.fmarket.annotation.RequireLogin;
 import com.sorryisme.fmarket.common.SessionManager;
 import com.sorryisme.fmarket.common.dto.ResponseDto;
@@ -30,9 +31,9 @@ public class UserController {
         return ResponseDto.success(responseDto);
     }
 
-    @PutMapping("/user/update/{userId}")
+    @PutMapping("/user/update")
     @RequireLogin
-    public ResponseDto<Long> updateUser(@RequestBody @Valid UserUpdateRequestDto userUpdateRequestDto, @PathVariable(required = true) long userId) {
+    public ResponseDto<Long> updateUser(@RequestBody @Valid UserUpdateRequestDto userUpdateRequestDto, @LoginUserId Long userId) {
         long id = userService.updateUser(userUpdateRequestDto, userId);
         return ResponseDto.success(id);
     }
