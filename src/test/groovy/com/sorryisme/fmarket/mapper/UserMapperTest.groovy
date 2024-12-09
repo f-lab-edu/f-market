@@ -2,6 +2,7 @@ package com.sorryisme.fmarket.mapper
 
 import com.sorryisme.fmarket.domain.Store
 import com.sorryisme.fmarket.domain.User
+import com.sorryisme.fmarket.testUtils.DomainFixture
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
@@ -18,7 +19,7 @@ class UserMapperTest extends Specification {
 
     def "유저 정보가 넘어오면 정상적으로 저장되고 id 생성한다"() {
         given:
-        User saveUser = createUser()
+        User saveUser = DomainFixture.createUser()
 
         when:
         int result = userMapper.insertUser(saveUser)
@@ -30,7 +31,7 @@ class UserMapperTest extends Specification {
 
     def "중복된 유저가 있으면 true 리턴한다"() {
         given:
-        User saveUser = createUser()
+        User saveUser = DomainFixture.createUser()
         userMapper.insertUser(saveUser)
 
         when:
@@ -42,7 +43,7 @@ class UserMapperTest extends Specification {
 
     def "상점 정보가 넘어오면 상점 정보가 저장되고 id가 생성된다"() {
         given:
-        User saveUser = createUser()
+        User saveUser = DomainFixture.createUser()
         userMapper.insertUser(saveUser)
 
         Store store = Store.builder()
@@ -63,7 +64,7 @@ class UserMapperTest extends Specification {
 
     def "유저 ID가 존재하면 true를 반환한다"() {
         given:
-        User saveUser = createUser()
+        User saveUser = DomainFixture.createUser()
         userMapper.insertUser(saveUser)
 
         when:
@@ -75,10 +76,10 @@ class UserMapperTest extends Specification {
 
     def "유저 정보를 업데이트하면 정상적으로 반영된다"() {
         given:
-        User saveUser = createUser()
+        User saveUser = DomainFixture.createUser()
         userMapper.insertUser(saveUser)
 
-        User updateUser = createUpdateUser(saveUser.getId())
+        User updateUser = DomainFixture.createUpdateUser(saveUser.getId())
 
         when:
         int updateResult = userMapper.updateUser(updateUser)
@@ -93,7 +94,7 @@ class UserMapperTest extends Specification {
 
     def "로그인 아이디로 조회 시 유저 정보를 반환한다"() {
         given:
-        User saveUser = createUser()
+        User saveUser = DomainFixture.createUser()
         userMapper.insertUser(saveUser)
 
         when:
@@ -103,26 +104,6 @@ class UserMapperTest extends Specification {
         findUser.salt == "testSalt"
         findUser.password == "xptmxmqlalfqjsgh!"
 
-    }
-
-    private static User createUser() {
-        return User.builder()
-                .loginId("testUser")
-                .password("xptmxmqlalfqjsgh!")
-                .salt("testSalt")
-                .name("테스트유저")
-                .email("test@naver.com")
-                .phoneNumber("01012345678")
-                .build()
-    }
-
-    private static User createUpdateUser(long id) {
-        return User.builder()
-                .id(id)
-                .name("업데이트된 이름")
-                .email("updated_email@test.com")
-                .phoneNumber("01199999999")
-                .build()
     }
 
 }
