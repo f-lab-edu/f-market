@@ -46,6 +46,7 @@ CREATE TABLE `store` (
 
 CREATE TABLE `product` (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '상품 ID',
+  `product_name` varchar(255) DEFAULT NULL COMMENT '제품명',
   `description` text NOT NULL COMMENT '상품 설명',
   `thumbnail` varchar(255) DEFAULT NULL COMMENT '썸네일 URL',
   `major_category` int DEFAULT NULL COMMENT '대분류 코드',

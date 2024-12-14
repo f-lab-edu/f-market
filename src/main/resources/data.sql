@@ -66,11 +66,11 @@ VALUES
 ('공구/안전/산업용품', 8, '공구 및 안전 장비, 산업 용품');
 
 -- 테스트를 위한 데이터
-INSERT INTO `product` (`description`, `thumbnail`, `major_category`, `subcategory`, `catalog`, `created_at`, `updated_at`)
+INSERT INTO `product` (`product_name`,`description`, `thumbnail`, `major_category`, `subcategory`, `catalog`, `created_at`, `updated_at`)
 VALUES
-    ('제품 설명 1', 'https://example.com/thumbnail1.jpg', 1, 101, '카탈로그 정보 1', NOW(), NOW()),
-    ('제품 설명 2', 'https://example.com/thumbnail2.jpg', 2, 201, '카탈로그 정보 2', NOW(), NOW()),
-    ('제품 설명 3', 'https://example.com/thumbnail3.jpg', 1, 102, '카탈로그 정보 3', NOW(), NOW());
+    ('제품명1','제품 설명 1', 'https://example.com/thumbnail1.jpg', 1, 101, '카탈로그 정보 1', NOW(), NOW()),
+    ('제품명2','제품 설명 2', 'https://example.com/thumbnail2.jpg', 2, 201, '카탈로그 정보 2', NOW(), NOW()),
+    ('제품명3','제품 설명 3', 'https://example.com/thumbnail3.jpg', 1, 102, '카탈로그 정보 3', NOW(), NOW());
 INSERT INTO `product_option` (`product_id`, `option_name`, `origin_price`, `sale_price`, `created_at`, `updated_at`)
 VALUES
     (1, '옵션 A', 1000.00, 900.00, NOW(), NOW()),
