@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sorryisme.fmarket.mapper.ProductMapper">
+
+    <resultMap id="productMap" type="com.sorryisme.fmarket.dto.response.ProductResponseDto">
+        <id property="id" column="id" />
+        <result property="description" column="description" />
+        <result property="thumbnail" column="thumbnail" />
+        <result property="catalog" column="catalog" />
+        <result property="createdAt" column="created_at" />
+        <result property="updatedAt" column="updated_at" />
+
+        <collection property="options" ofType="com.sorryisme.fmarket.dto.response.ProductOptionResponseDto">
+            <id property="id" column="option_id" />
+            <result property="optionName" column="option_name" />
+            <result property="originPrice" column="origin_price" />
+            <result property="salePrice" column="sale_price" />
+        </collection>
+
+        <collection property="reviews" ofType="com.sorryisme.fmarket.dto.response.ProductReviewResponseDto">
+            <id property="reviewId" column="review_id" />
+            <result property="productId" column="product_id" />
+            <result property="userId" column="user_id" />
+            <result property="rating" column="rating" />
+            <result property="reviewText" column="review_text" />
+            <result property="createdAt" column="review_created_at" />
+        </collection>
+    </resultMap>
+
+    <select id="findAllProductList" resultType="com.sorryisme.fmarket.domain.Product" parameterType="com.sorryisme.fmarket.dto.request.ProductSearchDto">
+        SELECT
+            id,
+            product_name,
+            description,
+            thumbnail,
+            major_category,
+            subcategory,
+            catalog
+        FROM
+            PRODUCT
+        <where>
+            <if test='query != null and query != ""'>product_name like CONCAT('%', #{query}, '%')</if>
+            <if test='majorCategory != null'>AND major_category = #{majorCategory}</if>
+            <if test='subcategory != null'>AND subcategory = #{subcategory}</if>
+        </where>
+        LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}
+    </select>
+
+    <select id="countProducts" resultType="int" parameterType="com.sorryisme.fmarket.dto.request.ProductSearchDto">
+        SELECT COUNT(*) FROM PRODUCT
+    </select>
+
+    <select id="isExistProductById" resultType="boolean">
+        SELECT EXISTS (SELECT id FROM PRODUCT WHERE id = #{productId})
+    </select>
+
+    <insert id="insertProductReview" parameterType="com.sorryisme.fmarket.domain.ProductReview" keyProperty="reviewId" useGeneratedKeys="true">
+        INSERT INTO PRODUCT_REVIEW(product_id, user_id, review_text, rating)
+        VALUES(#{productId}, #{userId}, #{reviewText}, #{rating})
+    </insert>
+
+    <select id="findOneProductById" resultMap="productMap">
+        SELECT
+            p.id,
+            p.description,
+            p.thumbnail,
+            p.catalog,
+            p.created_at,
+            p.updated_at,
+            po.id as option_id,
+            po.option_name,
+            po.origin_price,
+            po.sale_price,
+            pr.review_id,
+            pr.product_id,
+            pr.user_id,
+            pr.rating,
+            pr.review_text,
+            pr.created_at as review_created_at
+        FROM
+            product p
+            LEFT JOIN
+            product_option po ON p.id = po.product_id
+            LEFT JOIN
+            product_review pr ON p.id = pr.product_id
+        WHERE
+            p.id = #{productId}
+    </select>
+
+</mapper>

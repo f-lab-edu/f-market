@@ -1,8 +1,6 @@
 package com.sorryisme.fmarket.testUtils;
 
-import com.sorryisme.fmarket.domain.Cart;
-import com.sorryisme.fmarket.domain.CartDetail;
-import com.sorryisme.fmarket.domain.User;
+import com.sorryisme.fmarket.domain.*;
 
 public class DomainFixture {
     public static User createUser() {
@@ -36,6 +34,25 @@ public class DomainFixture {
                 .cartId(cartId)
                 .productOptionId(1L)
                 .quantity(5)
+                .build();
+    }
+
+    public static ProductReview createProductReview(Long userId) {
+        return ProductReview.builder()
+                .userId(userId)
+                .productId(1L)
+                .reviewText("좋은 제품입니다.")
+                .rating(5)
+                .build();
+    }
+
+    public static Product createProduct() {
+        return Product.builder()
+                .id(1L)
+                .product_name("제품명1")
+                .description("상품설명")
+                .thumbnail("썸네일 주소")
+                .catalog("카탈로그")
                 .build();
     }
 }
