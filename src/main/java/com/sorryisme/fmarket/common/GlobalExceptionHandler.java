@@ -20,35 +20,35 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {DuplicateDataException.class})
     protected ResponseEntity<ResponseDto<Object>> handleDuplicateDataException(DuplicateDataException e) {
-        log.error(e.getMessage());
+        log.error("DuplicateDataException: {}", e.getMessage());
         ResponseDto<Object> dto = ResponseDto.fail(HttpStatus.CONFLICT.value(), null, e.getMessage());
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @ExceptionHandler(value = {NotFoundDataException.class})
     protected ResponseEntity<ResponseDto<Object>> handleNotFoundDataException(NotFoundDataException e) {
-        log.error(e.getMessage());
+        log.error("NotFoundDataException: {}", e.getMessage());
         ResponseDto<Object> dto = ResponseDto.fail(HttpStatus.NOT_FOUND.value(), null, e.getMessage());
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @ExceptionHandler(value = {UpdateFailException.class})
     protected ResponseEntity<ResponseDto<Object>> handleUpdateFailException(UpdateFailException e) {
-        log.error(e.getMessage());
+        log.error("UpdateFailException: {}", e.getMessage());
         ResponseDto<Object> dto = ResponseDto.fail(HttpStatus.INTERNAL_SERVER_ERROR.value(), null, e.getMessage());
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @ExceptionHandler(value = {IllegalArgumentException.class})
     protected ResponseEntity<ResponseDto<Object>> handleIllegalArgumentException(IllegalArgumentException e) {
-        log.error("IllegalArgumentException", e);
+        log.error("IllegalArgumentException: {}", e.getMessage());
         ResponseDto<Object> dto = ResponseDto.fail(HttpStatus.BAD_REQUEST.value(), null, e.getMessage());
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @ExceptionHandler(value = {RequireLoginException.class})
     protected ResponseEntity<ResponseDto<Object>> handleRequireLoginException(RequireLoginException e) {
-        log.error(e.getMessage());
+        log.error("RequireLoginException: {}", e.getMessage());
         ResponseDto<Object> dto = ResponseDto.fail(HttpStatus.BAD_REQUEST.value(), null, e.getMessage());
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
