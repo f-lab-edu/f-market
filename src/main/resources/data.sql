@@ -77,3 +77,22 @@ VALUES
     (1, '옵션 B', 2000.00, 1800.00, NOW(), NOW()),
     (2, '옵션 C', 1500.00, 1400.00, NOW(), NOW()),
     (3, '옵션 D', 3000.00, 2900.00, NOW(), NOW());
+
+INSERT INTO `inventory` (`productOptionId`, `quantity`) values(1 ,100);
+INSERT INTO `inventory` (`productOptionId`, `quantity`) values(2 ,100);
+
+INSERT INTO `user` (`login_id`, `password`, `salt`, `name`, `email`, `phone_number`, `role`, `created_at`, `updated_at`)
+VALUES
+    ('dummyUser', 'xptmxmqlalfqjsgh!', 'dummySalt', '더미유저', 'dummy@naver.com', '01099999999', 'USER', NOW(), NOW());
+-- 주문 데이터 삽입
+INSERT INTO `order` (`user_id`, `order_date`, `status`, `total_amount`, `created_at`, `updated_at`)
+VALUES
+    (1, NOW(), 'COMPLETED', 3600.00, NOW(), NOW()),
+    (1, NOW(), 'PENDING', 2900.00, NOW(), NOW());
+
+-- 주문 상세 데이터 삽입
+INSERT INTO `order_detail` (`order_id`, `product_option_id`, `quantity`, `price`, `created_at`, `updated_at`)
+VALUES
+    (1, 1, 2, 1800.00, NOW(), NOW()), -- 옵션 A, 2개
+    (1, 2, 1, 1800.00, NOW(), NOW()), -- 옵션 B, 1개
+    (2, 4, 1, 2900.00, NOW(), NOW()); -- 옵션 D, 1개

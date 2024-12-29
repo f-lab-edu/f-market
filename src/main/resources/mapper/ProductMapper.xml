@@ -48,13 +48,18 @@
 
     <select id="countProducts" resultType="int" parameterType="com.sorryisme.fmarket.dto.request.ProductSearchDto">
         SELECT COUNT(*) FROM PRODUCT
+        <where>
+            <if test='query != null and query != ""'>product_name like CONCAT('%', #{query}, '%')</if>
+            <if test='majorCategory != null'>AND major_category = #{majorCategory}</if>
+            <if test='subcategory != null'>AND subcategory = #{subcategory}</if>
+        </where>
     </select>
 
     <select id="isExistProductById" resultType="boolean">
         SELECT EXISTS (SELECT id FROM PRODUCT WHERE id = #{productId})
     </select>
 
-    <insert id="insertProductReview" parameterType="com.sorryisme.fmarket.domain.ProductReview" keyProperty="reviewId" useGeneratedKeys="true">
+    <insert id="insertProductReview"  keyProperty="reviewId" useGeneratedKeys="true">
         INSERT INTO PRODUCT_REVIEW(product_id, user_id, review_text, rating)
         VALUES(#{productId}, #{userId}, #{reviewText}, #{rating})
     </insert>
