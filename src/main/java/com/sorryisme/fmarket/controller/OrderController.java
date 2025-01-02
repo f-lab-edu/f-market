@@ -33,13 +33,13 @@ public class OrderController {
         return ResponseDto.success(searchResult);
     }
 
-    @PutMapping("orders/{id}/cancel")
+    @PutMapping("/orders/{id}/cancel")
     @RequireLogin
     public ResponseDto<Long> cancelOrder(@PathVariable Long id) {
         return ResponseDto.success(orderService.cancelOrder(id));
     }
 
-    @PutMapping("orders/{id}/confirm")
+    @PutMapping("/orders/{id}/confirm")
     @RequireLogin
     public ResponseDto<Long> confirmOrder(@PathVariable Long id) {
         return ResponseDto.success(orderService.confirmOrder(id));
