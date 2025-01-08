@@ -155,6 +155,7 @@ CREATE TABLE `subcategory` (
 
 CREATE TABLE `inventory` (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '재고 ID',
+  `productOptionId` bigint NOT NULL COMMENT '제품 옵션 ID',
   `quantity` int NOT NULL DEFAULT '0' COMMENT '현재 수량',
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '생성 일시',
   `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정 일시',

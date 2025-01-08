@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sorryisme.fmarket.mapper.InventoryMapper">
+
+    <select id="findStockQuantityForUpdate" resultType="com.sorryisme.fmarket.domain.Inventory">
+        SELECT
+            id,
+            productOptionId,
+            quantity
+            FROM INVENTORY
+        WHERE productOptionId IN (
+            <foreach collection="list" item="item" open="(" close=")" separator=",">
+                #{item.productOptionId}
+            </foreach>
+        ) FOR UPDATE
+    </select>
+
+    <update id="increaseStockQuantity" parameterType="com.sorryisme.fmarket.domain.Inventory">
+        UPDATE
+            INVENTORY
+        SET
+            quantity = quantity + #{quantity}
+        WHERE
+            productOptionId = #{productOptionId}
+    </update>
+
+
+</mapper>

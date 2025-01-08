@@ -1,6 +1,10 @@
 package com.sorryisme.fmarket.testUtils;
 
 import com.sorryisme.fmarket.domain.*;
+import com.sorryisme.fmarket.enums.OrderStatus;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 public class DomainFixture {
     public static User createUser() {
@@ -53,6 +57,25 @@ public class DomainFixture {
                 .description("상품설명")
                 .thumbnail("썸네일 주소")
                 .catalog("카탈로그")
+                .build();
+    }
+
+    public static Inventory createInventory(Long productOptionId, Integer quantity) {
+        return Inventory.builder()
+                .productOptionId(productOptionId)
+                .quantity(quantity)
+                .build();
+    }
+
+    public static Order createOrder() {
+        return Order.builder()
+                .id(1L)
+                .userId(1L)
+                .status(OrderStatus.PENDING.getValue())
+                .orderDate(LocalDateTime.now())
+                .totalAmount(new BigDecimal(10000))
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
                 .build();
     }
 }
