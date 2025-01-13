@@ -16,7 +16,7 @@ class InventoryMapperTest extends Specification {
     @Autowired
     private InventoryMapper inventoryMapper
 
-    List<Inventory> inventories = Arrays.asList(new Inventory(1L, 0));
+    List<Inventory> inventories = DomainFixture.createInventories()
 
     def "productOptionId가 제공되면 Inventory 데이터가 조회된다"() {
 
@@ -44,6 +44,21 @@ class InventoryMapperTest extends Specification {
         then:
         result == 1
         beforeInventory.get(0).getQuantity() + 10 == updatedInventory.get(0).getQuantity()
+    }
+
+    def "productOptionId와 quantity 리스트를 전달하면 inventory 테이블의 수량이 업데이트된다"() {
+
+        given:
+        List<Inventory> inventoryList = DomainFixture.createInventories()
+
+        when:
+        int result = inventoryMapper.updateStockQuantity(inventoryList)
+        List<Inventory> updatedInventory = inventoryMapper.findStockQuantityForUpdate(inventoryList)
+
+        then:
+        result == inventoryList.size()
+        inventoryList.get(0).getQuantity() == updatedInventory.get(0).getQuantity()
+        inventoryList.get(1).getQuantity() == updatedInventory.get(1).getQuantity()
     }
 
 

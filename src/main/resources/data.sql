@@ -78,8 +78,8 @@ VALUES
     (2, '옵션 C', 1500.00, 1400.00, NOW(), NOW()),
     (3, '옵션 D', 3000.00, 2900.00, NOW(), NOW());
 
-INSERT INTO `inventory` (`productOptionId`, `quantity`) values(1 ,100);
-INSERT INTO `inventory` (`productOptionId`, `quantity`) values(2 ,100);
+INSERT INTO `inventory` (`product_option_id`, `quantity`) values(1 ,100);
+INSERT INTO `inventory` (`product_option_id`, `quantity`) values(2 ,100);
 
 INSERT INTO `user` (`login_id`, `password`, `salt`, `name`, `email`, `phone_number`, `role`, `created_at`, `updated_at`)
 VALUES

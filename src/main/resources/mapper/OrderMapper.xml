@@ -39,14 +39,14 @@
     </select>
 
     <select id="countOrderList" resultType="int" parameterType="com.sorryisme.fmarket.dto.request.OrderSearchDto">
-        SELECT COUNT(*) FROM "ORDER" WHERE user_id = #{userId}
+        SELECT COUNT(*) FROM `ORDER` WHERE user_id = #{userId}
         <if test='startPeriod != null and startPeriod != "" and endPeriod != null and endPeriod != ""'>
             AND order_date BETWEEN #{startPeriod} AND #{endPeriod}
         </if>
     </select>
 
     <select id="isExistOrderById" resultType="boolean">
-        SELECT EXISTS (SELECT id FROM "ORDER" WHERE id = #{orderId})
+        SELECT EXISTS (SELECT id FROM `ORDER` WHERE id = #{orderId})
     </select>
 
     <update id="updateOrder">
@@ -77,6 +77,20 @@
              LEFT JOIN `ORDER_DETAIL` od ON (o.id = od.order_id)
         WHERE o.id = #{orderId}
     </select>
+
+    <insert id="createOrder" parameterType="com.sorryisme.fmarket.domain.Order" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO `ORDER`(user_id, order_date, status, total_amount)
+        VALUES (#{userId}, now(), #{status}, #{totalAmount})
+    </insert>
+
+    <insert id="createOrderDetail" parameterType="com.sorryisme.fmarket.domain.OrderDetail">
+        INSERT INTO `ORDER_DETAIL`(order_id, product_option_id, quantity, price)
+        VALUES
+        <foreach collection="list" item="orderDetail" separator="," >
+            (#{orderDetail.orderId}, #{orderDetail.productOptionId}, #{orderDetail.quantity}, #{orderDetail.price})
+        </foreach>
+    </insert>
+
 
 
 </mapper>

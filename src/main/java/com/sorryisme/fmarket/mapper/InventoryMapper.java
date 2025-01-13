@@ -9,4 +9,5 @@ import java.util.List;
 public interface InventoryMapper {
     List<Inventory> findStockQuantityForUpdate(List<Inventory> inventories);
     int increaseStockQuantity(Inventory inventory);
+    int updateStockQuantity(List<Inventory> inventory);
 }

@@ -2,6 +2,10 @@ package com.sorryisme.fmarket.service
 
 import com.sorryisme.fmarket.domain.Inventory
 import com.sorryisme.fmarket.domain.Order
+import com.sorryisme.fmarket.domain.OrderDetail
+import com.sorryisme.fmarket.domain.ProductOption
+import com.sorryisme.fmarket.dto.request.OrderCreateDto
+import com.sorryisme.fmarket.dto.request.OrderItemRequestDto
 import com.sorryisme.fmarket.dto.request.OrderSearchDto
 import com.sorryisme.fmarket.dto.response.OrderDetailResponseDto
 import com.sorryisme.fmarket.dto.response.OrderResponseDto
@@ -9,6 +13,7 @@ import com.sorryisme.fmarket.enums.OrderStatus
 import com.sorryisme.fmarket.exception.NotFoundDataException
 import com.sorryisme.fmarket.mapper.InventoryMapper
 import com.sorryisme.fmarket.mapper.OrderMapper
+import com.sorryisme.fmarket.mapper.ProductMapper
 import com.sorryisme.fmarket.testUtils.DomainFixture
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -20,7 +25,27 @@ class OrderServiceTest extends Specification {
 
     OrderMapper orderMapper = Mock()
     InventoryMapper inventoryMapper = Mock()
-    OrderService orderService = new OrderService(orderMapper, inventoryMapper)
+    ProductMapper productMapper = Mock()
+    OrderService orderService = new OrderService(orderMapper, inventoryMapper, productMapper)
+
+    OrderCreateDto orderCreateDto
+    List<ProductOption> productOptions
+    List<Inventory> inventories
+
+    def setup() {
+        orderCreateDto = new OrderCreateDto([
+                new OrderItemRequestDto(1L, 3),
+                new OrderItemRequestDto(2L, 2)
+        ])
+
+        productOptions = [
+                new ProductOption(1L, 101L, "Option1", new BigDecimal("1000.00"), new BigDecimal("900.00"), LocalDateTime.now(), LocalDateTime.now()),
+                new ProductOption(2L, 102L, "Option2", new BigDecimal("2000.00"), new BigDecimal("1800.00"), LocalDateTime.now(), LocalDateTime.now())
+        ]
+
+        inventories = DomainFixture.createInventories()
+    }
+
 
     def "dto 제공되면 페이징 정보가 포함된 주문정보가 전달된다"() {
 
@@ -139,6 +164,43 @@ class OrderServiceTest extends Specification {
     }
 
 
+    def "createOrder는 주문을 생성하고 재고를 업데이트한다"() {
+        given:
+        orderCreateDto = new OrderCreateDto([
+                new OrderItemRequestDto(1L, 1),
+                new OrderItemRequestDto(2L, 2)
+        ])
+
+        productMapper.findProductOptionsByIds(_ as List<Long>) >> productOptions
+        inventoryMapper.findStockQuantityForUpdate(_ as List<Inventory>) >> inventories
+        orderMapper.createOrder(_ as Order) >> 1
+        orderMapper.createOrderDetail(_ as List<OrderDetail>) >> 2
+        inventoryMapper.updateStockQuantity(_ as List<Inventory> ) >> 2
+
+        when:
+        orderService.createOrder(1L, orderCreateDto)
+
+        then:
+        1 * orderMapper.createOrder(_)
+        1 * orderMapper.createOrderDetail(_)
+        1 * inventoryMapper.updateStockQuantity(_)
+    }
+
+    def "createOrder는 재고 부족 시 예외를 발생시킨다"() {
+        given:
+        productMapper.findProductOptionsByIds(_ as List<Long>) >> productOptions
+        inventoryMapper.findStockQuantityForUpdate(_ as List<Inventory>) >> inventories
+        orderMapper.createOrder(_ as Order) >> 1
+        orderMapper.createOrderDetail(_ as List<OrderDetail>) >> 2
+        inventoryMapper.updateStockQuantity(_ as List<Inventory> ) >> 2
+
+        when:
+        orderService.createOrder(1L, orderCreateDto)
+
+        then:
+        def e = thrown(IllegalArgumentException.class)
+        e.getMessage() == "재고 수량이 충분하지 않습니다."
+    }
 
     private static OrderSearchDto createOrderSearchDto() {
         def orderSearchDto = OrderSearchDto.builder()

@@ -5,6 +5,7 @@ import com.sorryisme.fmarket.enums.OrderStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class DomainFixture {
     public static User createUser() {
@@ -69,7 +70,6 @@ public class DomainFixture {
 
     public static Order createOrder() {
         return Order.builder()
-                .id(1L)
                 .userId(1L)
                 .status(OrderStatus.PENDING.getValue())
                 .orderDate(LocalDateTime.now())
@@ -77,5 +77,29 @@ public class DomainFixture {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
+    }
+
+    public static List<OrderDetail> createOrderDetails() {
+         OrderDetail orderDetail = OrderDetail.builder()
+                 .orderId(1L)
+                 .productOptionId(1L)
+                 .price(new BigDecimal(100))
+                 .quantity(5)
+                 .build();
+
+        OrderDetail orderDetail2 = OrderDetail.builder()
+                .orderId(1L)
+                .productOptionId(1L)
+                .price(new BigDecimal(100))
+                .quantity(5)
+                .build();
+
+        return List.of(orderDetail, orderDetail2);
+    }
+
+    public static List<Inventory> createInventories() {
+        Inventory inventory = createInventory(1L, 1);
+        Inventory inventory2 = createInventory(2L, 2);
+        return List.of(inventory, inventory2);
     }
 }
