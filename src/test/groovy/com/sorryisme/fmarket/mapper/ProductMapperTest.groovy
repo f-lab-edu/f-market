@@ -1,6 +1,7 @@
 package com.sorryisme.fmarket.mapper
 
 import com.sorryisme.fmarket.domain.Product
+import com.sorryisme.fmarket.domain.ProductOption
 import com.sorryisme.fmarket.domain.ProductReview
 import com.sorryisme.fmarket.domain.User
 import com.sorryisme.fmarket.dto.request.ProductSearchDto
@@ -27,7 +28,7 @@ class ProductMapperTest extends Specification {
 
     User user = DomainFixture.createUser()
     ProductReview productReview
-    ProductSearchDto searchDto = new ProductSearchDto("제품",1, 101, Pageable.ofSize(10))
+    ProductSearchDto searchDto = new ProductSearchDto("제품", 1, 101, Pageable.ofSize(10))
 
     def "DTO 내용이 전달되면 페이지 내용이 검색된다"() {
 
@@ -87,5 +88,17 @@ class ProductMapperTest extends Specification {
         product.id == productId
         product.getOptions().size() >= 1
         product.getReviews().size() >= 1
+    }
+
+    def "productOptionId 리스트를 전달하면 해당하는 ProductOption 목록이 반환된다"() {
+        given:
+        List<Long> productOptionIds = [1L, 2L];
+
+        when:
+        List<ProductOption> productOptions = productMapper.findProductOptionsByIds(productOptionIds)
+
+        then:
+        productOptions != null;
+        productOptions.size() == productOptionIds.size()
     }
 }

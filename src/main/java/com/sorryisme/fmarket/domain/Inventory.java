@@ -14,4 +14,10 @@ public class Inventory {
     private Long productOptionId;
     private Integer quantity;
 
+    public static Inventory of(Long productOptionId, Integer quantity) {
+        return Inventory.builder()
+                .productOptionId(productOptionId)
+                .quantity(quantity)
+                .build();
+    }
 }

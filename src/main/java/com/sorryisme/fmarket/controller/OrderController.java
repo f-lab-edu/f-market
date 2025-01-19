@@ -4,12 +4,15 @@ import com.sorryisme.fmarket.annotation.LoginUserId;
 import com.sorryisme.fmarket.annotation.RequireLogin;
 import com.sorryisme.fmarket.common.dto.ResponseDto;
 import com.sorryisme.fmarket.domain.Order;
+import com.sorryisme.fmarket.dto.request.OrderCreateDto;
 import com.sorryisme.fmarket.dto.request.OrderSearchDto;
 import com.sorryisme.fmarket.dto.response.OrderResponseDto;
 import com.sorryisme.fmarket.service.OrderService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.jaxb.SpringDataJaxb;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,6 +52,12 @@ public class OrderController {
     @RequireLogin
     public ResponseDto<OrderResponseDto> findOneOrder(@PathVariable Long id) {
         return ResponseDto.success(orderService.findOneOrder(id));
+    }
+
+    @PostMapping("/orders/create")
+    @RequireLogin
+    public ResponseDto<Long> createOrder(@LoginUserId Long userId, @RequestBody @Valid OrderCreateDto orderCreateDto) {
+        return ResponseDto.success(orderService.createOrder(userId, orderCreateDto));
     }
 
 }

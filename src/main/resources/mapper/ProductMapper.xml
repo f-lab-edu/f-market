@@ -92,4 +92,23 @@
             p.id = #{productId}
     </select>
 
+    <select id="findProductOptionsByIds" resultType="com.sorryisme.fmarket.domain.ProductOption">
+        SELECT
+            id,
+            product_id,
+            option_name,
+            origin_price,
+            sale_price,
+            created_at,
+            updated_at
+        FROM
+            `PRODUCT_OPTION`
+        WHERE id IN
+            <foreach collection="list" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+
+    </select>
+
+
 </mapper>

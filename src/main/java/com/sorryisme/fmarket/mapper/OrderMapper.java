@@ -1,8 +1,10 @@
 package com.sorryisme.fmarket.mapper;
 
 import com.sorryisme.fmarket.domain.Order;
+import com.sorryisme.fmarket.domain.OrderDetail;
 import com.sorryisme.fmarket.domain.Product;
 import com.sorryisme.fmarket.domain.ProductReview;
+import com.sorryisme.fmarket.dto.request.OrderCreateDto;
 import com.sorryisme.fmarket.dto.request.OrderSearchDto;
 import com.sorryisme.fmarket.dto.request.ProductSearchDto;
 import com.sorryisme.fmarket.dto.response.OrderResponseDto;
@@ -18,5 +20,7 @@ public interface OrderMapper {
     boolean isExistOrderById(Long orderId);
     int updateOrder(Long orderId, String status);
     OrderResponseDto findOrderById(Long orderId);
+    int createOrder(Order order);
+    int createOrderDetail(List<OrderDetail> orderDetail);
 
 }

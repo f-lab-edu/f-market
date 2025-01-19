@@ -1,7 +1,8 @@
 package com.sorryisme.fmarket.mapper
 
+
 import com.sorryisme.fmarket.domain.Order
-import com.sorryisme.fmarket.domain.User
+import com.sorryisme.fmarket.domain.OrderDetail
 import com.sorryisme.fmarket.dto.request.OrderSearchDto
 import com.sorryisme.fmarket.dto.response.OrderResponseDto
 import com.sorryisme.fmarket.testUtils.DomainFixture
@@ -27,6 +28,7 @@ class OrderMapperTest extends Specification {
             LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
             LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
             Pageable.ofSize(10))
+
 
     def "DTO 내용이 전달되면 주문 내역이 검색된다."() {
 
@@ -86,4 +88,28 @@ class OrderMapperTest extends Specification {
         order.id == orderId
         order.orderDetails.size() >= 0
     }
+
+    def "새로운 주문이 생성되면 생성된 주문의 ID가 반환된다"() {
+        given:
+        Order newOrder = DomainFixture.createOrder()
+
+        when:
+        int result = orderMapper.createOrder(newOrder)
+
+        then:
+        result == 1
+        newOrder.getId() != null
+    }
+
+    def "주문 상세가 여러 개 생성되면 정상적으로 삽입된다"() {
+        given:
+        List<OrderDetail> orderDetails = DomainFixture.createOrderDetails()
+
+        when:
+        int result = orderMapper.createOrderDetail(orderDetails)
+
+        then:
+        result == orderDetails.size()
+    }
+
 }

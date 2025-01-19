@@ -5,14 +5,14 @@
     <select id="findStockQuantityForUpdate" resultType="com.sorryisme.fmarket.domain.Inventory">
         SELECT
             id,
-            productOptionId,
+            product_option_id,
             quantity
             FROM INVENTORY
-        WHERE productOptionId IN (
+        WHERE product_option_id IN
             <foreach collection="list" item="item" open="(" close=")" separator=",">
                 #{item.productOptionId}
             </foreach>
-        ) FOR UPDATE
+        FOR UPDATE
     </select>
 
     <update id="increaseStockQuantity" parameterType="com.sorryisme.fmarket.domain.Inventory">
@@ -21,8 +21,17 @@
         SET
             quantity = quantity + #{quantity}
         WHERE
-            productOptionId = #{productOptionId}
+            product_option_id = #{productOptionId}
     </update>
 
+    <update id="updateStockQuantity" parameterType="com.sorryisme.fmarket.domain.Inventory">
+        UPDATE inventory AS i,
+            <foreach collection="list" item="item" open="(" close=")" separator=" UNION ALL ">
+                SELECT #{item.productOptionId} AS product_option_id, #{item.quantity} AS quantity
+            </foreach>
+         AS v
+            SET i.quantity = v.quantity
+        WHERE i.product_option_id = v.product_option_id
+    </update>
 
 </mapper>
