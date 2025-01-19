@@ -32,6 +32,8 @@ class OrderServiceTest extends Specification {
     List<ProductOption> productOptions
     List<Inventory> inventories
 
+    private static final String UUID = "166f9067-2e5f-4932-e314-f438ae846d24"
+
     def setup() {
         orderCreateDto = new OrderCreateDto([
                 new OrderItemRequestDto(1L, 3),
@@ -178,7 +180,7 @@ class OrderServiceTest extends Specification {
         inventoryMapper.updateStockQuantity(_ as List<Inventory> ) >> 2
 
         when:
-        orderService.createOrder(1L, orderCreateDto)
+        orderService.createOrder(UUID, 1L, orderCreateDto)
 
         then:
         1 * orderMapper.createOrder(_)
@@ -195,7 +197,7 @@ class OrderServiceTest extends Specification {
         inventoryMapper.updateStockQuantity(_ as List<Inventory> ) >> 2
 
         when:
-        orderService.createOrder(1L, orderCreateDto)
+        orderService.createOrder(UUID, 1L, orderCreateDto)
 
         then:
         def e = thrown(IllegalArgumentException.class)
