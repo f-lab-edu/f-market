@@ -14,7 +14,7 @@ public interface IdempotencyKeyMapper {
     @Select("SELECT EXISTS (SELECT id FROM idempotency_keys WHERE idempotency_key = #{idempotencyKey} FOR UPDATE)")
     boolean isExistIdempotencyKeyForUpdate(String idempotencyKey);
 
-    @Insert("INSERT INTO idempotency_keys(idempotency_key, created_at) values (#{idempotencyKey}, now())")
-    int insertIdempotencyKey(String idempotencyKey);
+    @Insert("INSERT IGNORE INTO idempotency_keys(idempotency_key, created_at) values (#{idempotencyKey}, now())")
+    int insertIgnoreIdempotencyKey(String idempotencyKey);
 
 }

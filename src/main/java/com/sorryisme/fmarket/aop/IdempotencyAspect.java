@@ -23,7 +23,6 @@ public class IdempotencyAspect {
     private final IdempotencyKeyMapper idempotencyKeyMapper;
 
     @Around("@annotation(com.sorryisme.fmarket.annotation.Idempotent)")
-    @Transactional
     public Object handleIdempotency(ProceedingJoinPoint joinPoint) throws Throwable {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
@@ -55,10 +54,9 @@ public class IdempotencyAspect {
         if (idempotencyKey == null)  throw new IllegalArgumentException("Idempotency-Key 헤더가 필요합니다.");
         if (idempotencyKey.length() != 36) throw new IllegalArgumentException("idempotencyKey 키는 36자리여야 합니다.");
 
-        boolean isExistIdempotencyKey = idempotencyKeyMapper.isExistIdempotencyKeyForUpdate(idempotencyKey);
-        if(isExistIdempotencyKey) throw new DuplicateDataException("중복된 요청입니다.");
+        int result = idempotencyKeyMapper.insertIgnoreIdempotencyKey(idempotencyKey);
+        if (result <= 0) throw new DuplicateDataException("중복된 요청입니다.");
 
-        idempotencyKeyMapper.insertIdempotencyKey(idempotencyKey);
 
         return joinPoint.proceed();
     }

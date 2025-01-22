@@ -17,26 +17,15 @@ class IdempotencyKeyMapperTest extends Specification {
 
     private static final String UUID = "166f9067-2e5f-4932-e314-f438ae846d24"
 
-    def "UUID가 제공되면 정상적으로 INSERT된다"() {
+    def "같은 UUID로 2번 INSERT 시 첫번째만 저장되고 두번 째는 무시된다"() {
 
         when:
-        int result = idempotencyKeyMapper.insertIdempotencyKey(UUID)
+        int expectedInsert = idempotencyKeyMapper.insertIgnoreIdempotencyKey(UUID)
+        int expectedIgnore = idempotencyKeyMapper.insertIgnoreIdempotencyKey(UUID)
 
         then:
-        result > 0
-
-    }
-
-    def "UUID가 조회가 되면 true를 리턴한다"() {
-
-        given:
-        idempotencyKeyMapper.insertIdempotencyKey(UUID);
-
-        when:
-        boolean isExistIdempotencyKey = idempotencyKeyMapper.isExistIdempotencyKeyForUpdate(UUID);
-
-        then:
-        isExistIdempotencyKey
+        expectedInsert > 0
+        expectedIgnore <= 0
 
     }
 

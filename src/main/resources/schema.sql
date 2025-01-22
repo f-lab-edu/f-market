@@ -190,8 +190,8 @@ CREATE TABLE `cart_detail` (
 );
 
 CREATE TABLE `idempotency_keys` (
-  `id` int primary key auto_increment,
-  `idempotency_key` CHAR(36),
+  `id` bigint primary key auto_increment,
+  `idempotency_key` CHAR(36) unique,
   `created_at` datetime(6),
    INDEX idx_idempotency_key(idempotency_key)
 );

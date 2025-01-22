@@ -124,7 +124,7 @@ class OrderServiceTest extends Specification {
         Long orderId = 1L
         OrderResponseDto orderResponseDto = createOrderResponseDto()
 
-        orderMapper.findOrderById(orderId) >> orderResponseDto
+        orderMapper.findOrderByIdForUpdate(orderId) >> orderResponseDto
         inventoryMapper.findStockQuantityForUpdate(_ as List<Inventory>) >> [Mock(Inventory)]
         inventoryMapper.increaseStockQuantity(_ as Inventory) >> 1
         orderMapper.updateOrder(orderId, OrderStatus.CANCELLED.getValue()) >> 1
@@ -139,7 +139,7 @@ class OrderServiceTest extends Specification {
     def "주문취소 시 주문이 없을 경우 에러를 발생시킨다"() {
         given:
         Long orderId = 1L
-        orderMapper.findOrderById(orderId) >> null
+        orderMapper.findOrderByIdForUpdate(orderId) >> null
 
         when:
         orderService.cancelOrder(orderId)
@@ -155,13 +155,13 @@ class OrderServiceTest extends Specification {
         OrderResponseDto orderResponseDto = Mock()
         orderResponseDto.getStatus() >> OrderStatus.COMPLETED.getValue()
 
-        orderMapper.findOrderById(orderId) >> orderResponseDto
+        orderMapper.findOrderByIdForUpdate(orderId) >> orderResponseDto
 
         when:
         orderService.cancelOrder(orderId)
 
         then:
-        def e = thrown(IllegalStateException.class)
+        def e = thrown(IllegalArgumentException.class)
         e.getMessage() == "변경이 불가한 상태입니다"
     }
 
