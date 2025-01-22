@@ -22,5 +22,6 @@ public interface OrderMapper {
     OrderResponseDto findOrderById(Long orderId);
     int createOrder(Order order);
     int createOrderDetail(List<OrderDetail> orderDetail);
+    OrderResponseDto findOrderByIdForUpdate(Long orderId);
 
 }

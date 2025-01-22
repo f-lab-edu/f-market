@@ -11,6 +11,7 @@ DROP TABLE IF EXISTS `order`;
 DROP TABLE IF EXISTS `product_option`;
 DROP TABLE IF EXISTS `product`;
 DROP TABLE IF EXISTS `user`;
+DROP TABLE IF EXISTS `idempotency_keys`;
 
 CREATE TABLE `user` (
   `id` bigint NOT NULL AUTO_INCREMENT,
@@ -186,4 +187,11 @@ CREATE TABLE `cart_detail` (
   PRIMARY KEY (`id`),
   CONSTRAINT `cart_detail_ibfk_1` FOREIGN KEY (`cart_id`) REFERENCES `cart` (`id`) ON DELETE CASCADE,
   CONSTRAINT `cart_detail_ibfk_2` FOREIGN KEY (`product_option_id`) REFERENCES `product_option` (`id`) ON DELETE CASCADE
+);
+
+CREATE TABLE `idempotency_keys` (
+  `id` bigint primary key auto_increment,
+  `idempotency_key` CHAR(36) unique,
+  `created_at` datetime(6),
+   INDEX idx_idempotency_key(idempotency_key)
 );

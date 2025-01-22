@@ -12,7 +12,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.jaxb.SpringDataJaxb;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 public class OrderController {
 
     private final OrderService orderService;
+    private static final String IDEMPOTENCY_KEY_HEADER = "Idempotency-Key";
 
 
     @PostMapping("/orders")
@@ -56,8 +56,12 @@ public class OrderController {
 
     @PostMapping("/orders/create")
     @RequireLogin
-    public ResponseDto<Long> createOrder(@LoginUserId Long userId, @RequestBody @Valid OrderCreateDto orderCreateDto) {
-        return ResponseDto.success(orderService.createOrder(userId, orderCreateDto));
+    public ResponseDto<Long> createOrder(
+            @RequestHeader(value = IDEMPOTENCY_KEY_HEADER) String idempotencyKey,
+            @LoginUserId Long userId,
+            @RequestBody @Valid OrderCreateDto orderCreateDto
+    ) {
+        return ResponseDto.success(orderService.createOrder(idempotencyKey, userId, orderCreateDto));
     }
 
 }
