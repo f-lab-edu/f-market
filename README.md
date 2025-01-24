@@ -9,6 +9,7 @@
 - MYSql
 - MyBatis
 - Spock
+- Docker
 
 # ERD
 https://github.com/f-lab-edu/f-market/wiki/ERD
@@ -24,3 +25,10 @@ https://github.com/f-lab-edu/f-market/wiki/%EA%B8%B0%EB%8A%A5-%EB%AA%85%EC%84%B8
 
 # API 명세
 https://github.com/f-lab-edu/f-market/wiki/API-%EB%AA%85%EC%84%B8
+
+
+# Docker Compose 실행
+터미널 내 `docker compose up -d` 명렁어 실행 시 백그라운드 실행  
+
+# Docker 종료 
+터미널 내 `docker compose down` 명령어 실행 시 컨테이너 종료

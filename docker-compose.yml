@@ -1,0 +1,60 @@
+services:
+  db-master:
+    image: mysql:8.4
+    container_name: mysql-master
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      TZ: ${TZ}
+      MYSQL_REPLICATION_USER: ${MYSQL_REPLICATION_USER}
+      MYSQL_REPLICATION_PASSWORD: ${MYSQL_REPLICATION_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_master_data:/var/lib/mysql
+      - ./docker-init/master:/docker-entrypoint-initdb.d
+      - ./docker-init/mysql-config/master.cnf:/etc/mysql/conf.d/master.cnf
+    networks:
+      - mysql-network
+  db-replica:
+    image: mysql:8.4
+    container_name: mysql-replica
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      TZ: ${TZ}
+      MYSQL_REPLICATION_USER: ${MYSQL_REPLICATION_USER}
+      MYSQL_REPLICATION_PASSWORD: ${MYSQL_REPLICATION_PASSWORD}
+    ports:
+      - "3307:3306" # 레플리카는 다른 포트로 노출
+    volumes:
+      - db_replica_data:/var/lib/mysql
+      - ./docker-init/replica:/docker-entrypoint-initdb.d
+      - ./docker-init/mysql-config/replica.cnf:/etc/mysql/conf.d/replica.cnf
+    depends_on:
+      - db-master
+    networks:
+      - mysql-network
+  java-app:
+    container_name: java-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db-master
+      - db-replica
+    networks:
+      - mysql-network
+    command: ["./wait-for-it.sh", "db-replica:3307", "--", "java", "-jar", "app.jar"]
+volumes:
+  db_master_data:
+  db_replica_data:
+networks:
+  mysql-network:
+# docker compose up --build
