@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -24,10 +25,12 @@ public class ProductService {
     private final MajorCategoryMapper majorCategoryMapper;
     private final ProductMapper productMapper;
 
+    @Transactional(readOnly = true)
     public List<MajorCategoryResponse> findMajorCategoryList() {
         return this.majorCategoryMapper.findMajorCategoryList();
     }
 
+    @Transactional(readOnly = true)
     public Page<Product> findAllProductList(ProductSearchDto productSearchDto) {
 
         List<Product> productList = productMapper.findAllProductList(productSearchDto);
@@ -36,6 +39,7 @@ public class ProductService {
         return new PageImpl<>(productList, productSearchDto.getPageable(), total);
     }
 
+    @Transactional(readOnly = true)
     public ProductResponseDto findProductById(Long id) {
 
         ProductResponseDto productResponseDto = productMapper.findOneProductById(id);
