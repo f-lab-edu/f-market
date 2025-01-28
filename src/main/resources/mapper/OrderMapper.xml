@@ -91,6 +91,24 @@
         </foreach>
     </insert>
 
-
+    <select id="findOrderByIdForUpdate" resultMap="orderMap">
+        SELECT
+            o.id,
+            o.user_id,
+            o.status,
+            o.total_amount,
+            o.order_date,
+            o.created_at,
+            o.updated_at,
+            od.id AS detail_id,
+            od.product_option_id,
+            od.quantity,
+            od.price,
+            od.created_at AS detail_created_at,
+            od.updated_at AS detail_updated_at
+        FROM `ORDER` o
+                 LEFT JOIN `ORDER_DETAIL` od ON (o.id = od.order_id)
+        WHERE o.id = #{orderId} FOR UPDATE
+    </select>
 
 </mapper>

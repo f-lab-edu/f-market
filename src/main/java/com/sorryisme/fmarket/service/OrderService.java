@@ -1,6 +1,11 @@
 package com.sorryisme.fmarket.service;
 
-import com.sorryisme.fmarket.domain.*;
+import com.sorryisme.fmarket.annotation.IdempotencyKeyParam;
+import com.sorryisme.fmarket.annotation.Idempotent;
+import com.sorryisme.fmarket.domain.Inventory;
+import com.sorryisme.fmarket.domain.Order;
+import com.sorryisme.fmarket.domain.OrderDetail;
+import com.sorryisme.fmarket.domain.ProductOption;
 import com.sorryisme.fmarket.dto.request.OrderCreateDto;
 import com.sorryisme.fmarket.dto.request.OrderItemRequestDto;
 import com.sorryisme.fmarket.dto.request.OrderSearchDto;
@@ -17,7 +22,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -57,11 +61,11 @@ public class OrderService {
     @Transactional
     public Long cancelOrder(Long orderId) {
 
-        OrderResponseDto orderResponseDto = orderMapper.findOrderById(orderId);
+        OrderResponseDto orderResponseDto = orderMapper.findOrderByIdForUpdate(orderId);
 
         if (orderResponseDto == null) throw new NotFoundDataException("찾을 수 없는 주문입니다.");
         if (!OrderStatus.PENDING.getValue().equals(orderResponseDto.getStatus()))
-            throw new IllegalStateException("변경이 불가한 상태입니다");
+            throw new IllegalArgumentException("변경이 불가한 상태입니다");
 
         List<Inventory> orderedInventories = orderResponseDto.getOrderDetails()
                 .stream()
@@ -75,8 +79,9 @@ public class OrderService {
         return orderId;
     }
 
+    @Idempotent
     @Transactional
-    public Long createOrder(Long userId, OrderCreateDto orderCreateDto) {
+    public Long createOrder(@IdempotencyKeyParam String idempotencyKey, Long userId, OrderCreateDto orderCreateDto) {
 
         // 1. 주문 생성
         List<ProductOption> productOptions = getProductOptions(orderCreateDto.getOrderItems());

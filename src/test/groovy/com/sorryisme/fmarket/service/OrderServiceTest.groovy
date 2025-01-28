@@ -32,6 +32,8 @@ class OrderServiceTest extends Specification {
     List<ProductOption> productOptions
     List<Inventory> inventories
 
+    private static final String UUID = "166f9067-2e5f-4932-e314-f438ae846d24"
+
     def setup() {
         orderCreateDto = new OrderCreateDto([
                 new OrderItemRequestDto(1L, 3),
@@ -122,7 +124,7 @@ class OrderServiceTest extends Specification {
         Long orderId = 1L
         OrderResponseDto orderResponseDto = createOrderResponseDto()
 
-        orderMapper.findOrderById(orderId) >> orderResponseDto
+        orderMapper.findOrderByIdForUpdate(orderId) >> orderResponseDto
         inventoryMapper.findStockQuantityForUpdate(_ as List<Inventory>) >> [Mock(Inventory)]
         inventoryMapper.increaseStockQuantity(_ as Inventory) >> 1
         orderMapper.updateOrder(orderId, OrderStatus.CANCELLED.getValue()) >> 1
@@ -137,7 +139,7 @@ class OrderServiceTest extends Specification {
     def "주문취소 시 주문이 없을 경우 에러를 발생시킨다"() {
         given:
         Long orderId = 1L
-        orderMapper.findOrderById(orderId) >> null
+        orderMapper.findOrderByIdForUpdate(orderId) >> null
 
         when:
         orderService.cancelOrder(orderId)
@@ -153,13 +155,13 @@ class OrderServiceTest extends Specification {
         OrderResponseDto orderResponseDto = Mock()
         orderResponseDto.getStatus() >> OrderStatus.COMPLETED.getValue()
 
-        orderMapper.findOrderById(orderId) >> orderResponseDto
+        orderMapper.findOrderByIdForUpdate(orderId) >> orderResponseDto
 
         when:
         orderService.cancelOrder(orderId)
 
         then:
-        def e = thrown(IllegalStateException.class)
+        def e = thrown(IllegalArgumentException.class)
         e.getMessage() == "변경이 불가한 상태입니다"
     }
 
@@ -178,7 +180,7 @@ class OrderServiceTest extends Specification {
         inventoryMapper.updateStockQuantity(_ as List<Inventory> ) >> 2
 
         when:
-        orderService.createOrder(1L, orderCreateDto)
+        orderService.createOrder(UUID, 1L, orderCreateDto)
 
         then:
         1 * orderMapper.createOrder(_)
@@ -195,7 +197,7 @@ class OrderServiceTest extends Specification {
         inventoryMapper.updateStockQuantity(_ as List<Inventory> ) >> 2
 
         when:
-        orderService.createOrder(1L, orderCreateDto)
+        orderService.createOrder(UUID, 1L, orderCreateDto)
 
         then:
         def e = thrown(IllegalArgumentException.class)

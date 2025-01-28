@@ -14,6 +14,7 @@ import org.springframework.web.util.ContentCachingResponseWrapper;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 
@@ -42,6 +43,7 @@ public class MDCLoggingFilter implements Filter {
         } finally {
             long processingTime = System.currentTimeMillis() - startTime;
             loggingRequestResponse(wrappedRequest, wrappedResponse, processingTime);
+            wrappedResponse.copyBodyToResponse();
             MDC.clear();
         }
     }
@@ -65,6 +67,7 @@ public class MDCLoggingFilter implements Filter {
                 String.format(">>[USER_AGENT]: %s\n", wrappedRequest.getHeader("User-Agent")) +
                 String.format(">>[REFERER]: %s\n", wrappedRequest.getHeader("Referer")) +
                 String.format(">>[ORIGIN]: %s\n", wrappedRequest.getHeader("Origin")) +
+                String.format(">>[Idempotency-Key]: %s\n", wrappedRequest.getHeader("Idempotency-Key")) +
                 String.format(">>[REMOTE_ADDR]: %s\n", wrappedRequest.getRemoteAddr()) +
                 String.format(">>[REMOTE_HOST]: %s\n", wrappedRequest.getRemoteHost()) +
                 String.format(">>[REQUEST_BODY]: %s\n", getRequestBody(wrappedRequest)) +
