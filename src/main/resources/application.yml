@@ -2,10 +2,16 @@ spring:
   application:
     name: fmarket
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.0.44:3306/fmarket?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true
-    username: sorry
-    password: rcq2ns7x2w0wNDI
+    source:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://db-master:3306/fmarket?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true
+      username: sorry
+      password: rcq2ns7x2w0wNDI
+    replica:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://db-replica:3306/fmarket?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true
+      username: sorry
+      password: rcq2ns7x2w0wNDI
   sql:
     init:
       mode: always

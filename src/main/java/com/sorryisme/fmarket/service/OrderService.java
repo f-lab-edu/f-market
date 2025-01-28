@@ -30,6 +30,7 @@ public class OrderService {
     private final InventoryMapper inventoryMapper;
     private final ProductMapper productMapper;
 
+    @Transactional(readOnly = true)
     public Page<Order> findAllOrderList(OrderSearchDto orderSearchDto) {
         List<Order> orderList = orderMapper.findAllOrderList(orderSearchDto);
         int total = orderMapper.countOrderList(orderSearchDto);
@@ -37,6 +38,7 @@ public class OrderService {
         return new PageImpl<>(orderList, orderSearchDto.getPageable(), total);
     }
 
+    @Transactional(readOnly = true)
     public OrderResponseDto findOneOrder(Long id) {
         OrderResponseDto orderResponseDto = orderMapper.findOrderById(id);
         if (orderResponseDto == null) throw new NotFoundDataException("찾을 수 없는 주문입니다.");

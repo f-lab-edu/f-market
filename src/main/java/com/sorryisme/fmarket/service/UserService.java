@@ -60,6 +60,7 @@ public class UserService {
         return SellerResponseDto.from(saveUser, saveStore);
     }
 
+    @Transactional(readOnly = true)
     public Long login(String loginId, String password) throws IllegalArgumentException {
         User user = this.userMapper.findUserByLoginId(loginId);
 
