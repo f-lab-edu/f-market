@@ -1,0 +1,14 @@
+# replica config
+
+[mysqld]
+sql_mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION,ANSI_QUOTES
+lower_case_table_names=1
+slow_query_log=1
+
+server_id=2
+relay_log=replica-relay-log
+relay_log_purge=ON
+read_only
+log_replica_updates
+gtid_mode=ON
+enforce_gtid_consistency=ON
