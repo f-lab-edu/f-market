@@ -40,7 +40,7 @@ public class CartService {
         return CartResponseDto.from(cartDetail);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Long deleteCartDetail(Long id) {
         boolean isExist = cartMapper.isExistCartDetailById(id);
         if (!isExist) throw new NotFoundDataException("찾을 수 없는 장바구니입니다");
