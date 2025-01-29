@@ -52,6 +52,22 @@ services:
     networks:
       - mysql-network
     command: ["./wait-for-it.sh", "db-replica:3307", "--", "java", "-jar", "app.jar"]
+  controller:
+    image: ngrinder/controller
+    ports:
+      - "9000:80"
+      - "16001:16001"
+      - "12000-12009:12000-12009"
+    volumes:
+      - ~/ngrinder-controller:/opt/ngrinder-controller
+    networks:
+      - mysql-network
+  agent:
+    image: ngrinder/agent
+    links:
+      - controller
+    networks:
+      - mysql-network
 volumes:
   db_master_data:
   db_replica_data:
