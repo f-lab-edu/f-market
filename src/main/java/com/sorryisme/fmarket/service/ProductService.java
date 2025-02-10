@@ -9,6 +9,7 @@ import com.sorryisme.fmarket.dto.response.ProductResponseDto;
 import com.sorryisme.fmarket.exception.NotFoundDataException;
 import com.sorryisme.fmarket.mapper.MajorCategoryMapper;
 import com.sorryisme.fmarket.mapper.ProductMapper;
+import com.sorryisme.fmarket.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -24,6 +25,7 @@ public class ProductService {
 
     private final MajorCategoryMapper majorCategoryMapper;
     private final ProductMapper productMapper;
+    private final ProductRepository productRepository;
 
     @Transactional(readOnly = true)
     public List<MajorCategoryResponse> findMajorCategoryList() {
@@ -62,6 +64,15 @@ public class ProductService {
 
         productMapper.insertProductReview(productReview);
         return productReview;
+    }
+
+
+    public Product saveProduct(Product product) {
+        return productRepository.save(product);
+    }
+
+    public List<Product> searchByProductName(String name) {
+        return productRepository.searchByProductName(name);
     }
 
 }

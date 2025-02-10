@@ -51,4 +51,17 @@ public class ProductController {
         ProductReview productReview = productService.createReview(requestDto, productId, userId);
         return ResponseDto.success(productReview);
     }
+
+
+    @PostMapping("/test")
+    public ResponseDto<Product> createProduct(@RequestBody Product product) {
+        Product savedProduct = productService.saveProduct(product);
+        return ResponseDto.success(savedProduct);
+    }
+
+    @GetMapping("/search")
+    public ResponseDto<List<Product>> searchProducts(@RequestParam String name) {
+        List<Product> products = productService.searchByProductName(name);
+        return ResponseDto.success(products);
+    }
 }
