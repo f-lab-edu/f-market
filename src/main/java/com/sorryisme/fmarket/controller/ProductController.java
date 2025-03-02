@@ -3,6 +3,7 @@ package com.sorryisme.fmarket.controller;
 import com.sorryisme.fmarket.annotation.LoginUserId;
 import com.sorryisme.fmarket.annotation.RequireLogin;
 import com.sorryisme.fmarket.common.dto.ResponseDto;
+import com.sorryisme.fmarket.document.Products;
 import com.sorryisme.fmarket.domain.Product;
 import com.sorryisme.fmarket.domain.ProductReview;
 import com.sorryisme.fmarket.dto.request.ProductReviewRequestDto;
@@ -54,14 +55,14 @@ public class ProductController {
 
 
     @PostMapping("/test")
-    public ResponseDto<Product> createProduct(@RequestBody Product product) {
-        Product savedProduct = productService.saveProduct(product);
+    public ResponseDto<Products> createProduct(@RequestBody Products product) {
+        Products savedProduct = productService.saveProduct(product);
         return ResponseDto.success(savedProduct);
     }
 
     @GetMapping("/search")
-    public ResponseDto<List<Product>> searchProducts(@RequestParam String name) {
-        List<Product> products = productService.searchByProductName(name);
+    public ResponseDto<List<Products>> searchProducts(@RequestParam String name) {
+        List<Products> products = productService.searchByProductName(name);
         return ResponseDto.success(products);
     }
 }

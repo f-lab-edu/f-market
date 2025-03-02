@@ -1,5 +1,6 @@
 package com.sorryisme.fmarket.service;
 
+import com.sorryisme.fmarket.document.Products;
 import com.sorryisme.fmarket.domain.Product;
 import com.sorryisme.fmarket.domain.ProductReview;
 import com.sorryisme.fmarket.dto.request.ProductReviewRequestDto;
@@ -67,12 +68,12 @@ public class ProductService {
     }
 
 
-    public Product saveProduct(Product product) {
+    public Products saveProduct(Products product) {
         return productRepository.save(product);
     }
 
-    public List<Product> searchByProductName(String name) {
-        return productRepository.searchByProductName(name);
+    public List<Products> searchByProductName(String name) {
+        return productRepository.searchProductsByProductName(name);
     }
 
 }

@@ -1,0 +1,15 @@
+{
+  "properties": {
+    "productId": {
+      "type": "long"
+    },
+    "productName": {
+      "type": "text",
+      "analyzer": "autocomplete",
+      "search_analyzer": "autocomplete_search"
+    },
+    "suggest": {
+      "type": "completion"
+    }
+  }
+}
